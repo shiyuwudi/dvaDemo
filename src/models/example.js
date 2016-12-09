@@ -1,3 +1,4 @@
+import key from 'keymaster'
 
 export default {
 
@@ -26,16 +27,27 @@ export default {
     },
   },
 
-  subscriptions: {
-    setup({ dispatch, history }) {
-    },
-  },
-
+  //异步函数(side effects)
   effects: {
-    *fetchRemote({ payload }, { call, put }) {
+    *add(action, { call, put }) {
+      yield call(delay, 1000);
+      yield put({type: 'minus'});
     },
   },
 
+  //订阅事件
+  subscriptions: {
+    keyboardWatcher({ dispatch, history }) {
+      key('ctrl+up', ()=>{
+        dispatch({type: 'add'});
+      });
+    },
+  },
 
+}
 
+function delay(timeout) {
+  return new Promise((resolve)=>{
+    setTimeout(resolve, timeout);
+  });
 }
